@@ -4,6 +4,21 @@ Thank you for contributing to Amurot Open Source! We welcome contributions from 
 
 ---
 
+## 📋 Prerequisites & System Requirements
+
+Before getting started, make sure you have the following installed on your machine:
+- **Git** (`>= 2.30`): [Download Git](https://git-scm.com/)
+- **Node.js** (`>= 18.x`, LTS `20.x` or `22.x` recommended): [Download Node.js](https://nodejs.org/)
+- **npm** (`>= 9.x`): Included with Node.js
+- **GitHub Account**: Active profile for forking and opening Pull Requests
+
+Quick sanity check:
+```bash
+git --version && node -v && npm -v
+```
+
+---
+
 ## 🌟 How to Add Your Profile & Projects
 
 We use a simple, Git-driven workflow to list creators and projects.
@@ -12,7 +27,7 @@ We use a simple, Git-driven workflow to list creators and projects.
 ```bash
 git clone https://github.com/<your-username>/opensource.git
 cd opensource
-git checkout -b add-<your-username>
+git checkout -b add-profile-<your-username>
 npm install
 ```
 
@@ -92,7 +107,7 @@ npm run validate
    ```bash
    git add src/content/members/your-github-username/
    git commit -m "feat(members): add @your-github-username profile and projects"
-   git push origin add-your-github-username
+   git push -u origin add-profile-your-github-username
    ```
 2. Open a Pull Request on [github.com/amurot-labs/opensource](https://github.com/amurot-labs/opensource).
 3. Automated CI checks will validate your markdown schema. Once approved and merged, your portfolio and projects will go live on [oss.amurot.com](https://oss.amurot.com)!
