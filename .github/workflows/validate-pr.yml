@@ -1,0 +1,32 @@
+name: Validate Contributor PR
+
+on:
+  pull_request:
+    paths:
+      - 'src/content/members/**'
+      - 'package.json'
+      - 'src/**'
+
+jobs:
+  validate:
+    name: Schema & Build Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Validate Member Markdown Schemas
+        run: npm run validate
+
+      - name: Test Production Build
+        run: npm run build
