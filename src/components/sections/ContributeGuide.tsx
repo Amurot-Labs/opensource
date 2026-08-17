@@ -1,7 +1,11 @@
 import { GitFork, Terminal, FileCode2, GitPullRequest, ArrowRight, UploadCloud, CheckCircle2, Wrench } from 'lucide-react';
 import { CodeSnippet } from '@/components/ui/CodeSnippet';
+import { UsernameInput } from '@/components/ui/UsernameInput';
+import { useUsername } from '@/lib/username-context';
 
 export function ContributeGuide() {
+  const { activeHandle, isCustomized, commands } = useUsername();
+
   const prerequisites = [
     { label: 'Git', version: '>= 2.30', desc: 'Installed & linked to GitHub' },
     { label: 'Node.js', version: '>= 18.x', desc: 'LTS (v20 / v22 recommended)' },
@@ -15,40 +19,44 @@ export function ContributeGuide() {
       title: 'Fork & Clone Repository',
       desc: 'Fork the repository on GitHub to your account, then clone it locally and install dependencies:',
       icon: GitFork,
-      code: 'git clone https://github.com/<username>/opensource.git && cd opensource && npm install',
-      hint: 'Replace <username> with your GitHub username',
+      code: commands.clone,
+      hint: isCustomized
+        ? `Configured for fork: github.com/${activeHandle}/opensource`
+        : 'Replace <username> with your GitHub username',
     },
     {
       num: '02',
       title: 'Create Branch & Scaffold Folder',
       desc: 'Create a dedicated feature branch and scaffold your contributor folder automatically:',
       icon: Terminal,
-      code: 'git checkout -b add-profile-<username> && npm run new-member <username>',
-      hint: 'Creates src/content/members/<username>/ with PROFILE.md & PROJECTS.md',
+      code: commands.scaffold,
+      hint: `Creates src/content/members/${activeHandle}/ with PROFILE.md & PROJECTS.md`,
     },
     {
       num: '03',
       title: 'Edit Content & Test Locally',
       desc: 'Fill in your bio, socials, and project details, preview your live microsite, and validate the schema:',
       icon: FileCode2,
-      code: 'npm run dev && npm run validate',
-      hint: 'Preview live at http://localhost:5173/@<username>',
+      code: commands.preview,
+      hint: `Preview live at http://localhost:5173/@${activeHandle}`,
     },
     {
       num: '04',
       title: 'Stage, Commit & Push',
       desc: 'Stage your folder only, commit with the standard convention, and push your branch to GitHub:',
       icon: UploadCloud,
-      code: 'git add src/content/members/<username> && git commit -m "feat(members): add <username> profile and projects" && git push -u origin add-profile-<username>',
-      hint: 'Only replace <username> with your handle',
+      code: commands.push,
+      hint: isCustomized
+        ? `Branch add-profile-${activeHandle} is ready to push`
+        : 'Only replace <username> with your handle',
     },
   ];
 
   const guiSteps = [
     'Open your browser and visit https://github.com/amurot-labs/opensource',
-    'Click the green "Compare & pull request" banner displayed at the top',
-    'Review your changes (ensure it only touches your src/content/members/<username>/ folder)',
-    'Click "Create pull request" — once verified and merged, your site is live at oss.amurot.com/@<username>!',
+    `Click the green "Compare & pull request" banner for branch add-profile-${activeHandle}`,
+    `Review your changes (ensure it only touches your src/content/members/${activeHandle}/ folder)`,
+    `Click "Create pull request" — once verified and merged, your site is live at oss.amurot.com/@${activeHandle}!`,
   ];
 
   return (
@@ -64,8 +72,13 @@ export function ContributeGuide() {
             How to Publish Your Project
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-secondary leading-relaxed">
-            Publishing on Amurot Open Source takes 3 minutes. Verify prerequisites, run the CLI commands, and submit your Pull Request.
+            Publishing on Amurot Open Source takes 3 minutes. Enter your GitHub username below to personalize all setup commands instantly.
           </p>
+        </div>
+
+        {/* Dynamic Interactive Username Bar */}
+        <div className="mb-6">
+          <UsernameInput variant="guide" />
         </div>
 
         {/* Prerequisites Card */}

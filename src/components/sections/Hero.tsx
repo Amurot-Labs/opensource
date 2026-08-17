@@ -1,5 +1,7 @@
 import { ArrowRight, GitPullRequest, Terminal } from 'lucide-react';
 import { CodeSnippet } from '@/components/ui/CodeSnippet';
+import { UsernameInput } from '@/components/ui/UsernameInput';
+import { useUsername } from '@/lib/username-context';
 
 interface HeroProps {
   projectCount: number;
@@ -7,6 +9,8 @@ interface HeroProps {
 }
 
 export function Hero({ projectCount, memberCount }: HeroProps) {
+  const { commands } = useUsername();
+
   return (
     <section className="relative pt-24 sm:pt-28 pb-10 sm:pb-14 px-4 sm:px-6 overflow-hidden">
       {/* Background Radial Glow */}
@@ -59,13 +63,16 @@ export function Hero({ projectCount, memberCount }: HeroProps) {
           </a>
         </div>
 
-        {/* Interactive CLI Scaffolding Prompt */}
-        <div className="mt-8 max-w-md mx-auto">
-          <div className="text-xs font-mono text-muted mb-2 flex items-center justify-center gap-1.5">
+        {/* Interactive Dynamic Username Customizer in Hero */}
+        <div className="mt-9 max-w-md mx-auto space-y-3">
+          <div className="text-xs font-mono text-muted flex items-center justify-center gap-1.5">
             <Terminal className="h-3.5 w-3.5 text-accent" />
-            <span>Scaffold your folder in 1 second</span>
+            <span>Enter your GitHub handle to personalize setup commands</span>
           </div>
-          <CodeSnippet code="npm run new-member your-github-username" />
+
+          <UsernameInput variant="hero" />
+
+          <CodeSnippet code={commands.heroScaffold} />
         </div>
       </div>
     </section>

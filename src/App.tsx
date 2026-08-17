@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ThemeProvider } from '@/lib/theme-context';
+import { UsernameProvider } from '@/lib/username-context';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { ProjectModal } from '@/components/ui/ProjectModal';
@@ -88,19 +89,21 @@ export function App() {
 
   return (
     <ThemeProvider>
-      <div className="min-h-screen flex flex-col bg-primary-bg text-primary">
-        <Navbar currentPath={currentPath} />
-        <div className="flex-1">
-          {renderPage()}
-        </div>
-        <Footer />
+      <UsernameProvider>
+        <div className="min-h-screen flex flex-col bg-primary-bg text-primary">
+          <Navbar currentPath={currentPath} />
+          <div className="flex-1">
+            {renderPage()}
+          </div>
+          <Footer />
 
-        {/* Global Slide-Over Project Detail Drawer */}
-        <ProjectModal
-          project={activeProject}
-          onClose={() => setActiveProject(null)}
-        />
-      </div>
+          {/* Global Slide-Over Project Detail Drawer */}
+          <ProjectModal
+            project={activeProject}
+            onClose={() => setActiveProject(null)}
+          />
+        </div>
+      </UsernameProvider>
     </ThemeProvider>
   );
 }
