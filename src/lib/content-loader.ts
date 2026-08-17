@@ -1,4 +1,5 @@
-import type { Member, Project } from './types';
+import { load } from 'js-yaml';
+import type { Member, Project, ProjectStatus } from './types';
 
 interface RawFiles {
   [path: string]: string;
@@ -12,104 +13,31 @@ const rawFiles = import.meta.glob('/src/content/members/*/*.md', {
 }) as RawFiles;
 
 /**
- * Lightweight, safe YAML frontmatter parser for frontmatter blocks
+ * Robust YAML frontmatter parser using js-yaml
  */
 function parseFrontmatter(content: string): { data: Record<string, any>; body: string } {
-  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
-  if (!match) {
+  const trimmed = content.trim();
+  if (!trimmed.startsWith('---')) {
     return { data: {}, body: content };
   }
 
-  const yamlBlock = match[1];
-  const body = match[2].trim();
-  const data: Record<string, any> = {};
-
-  const lines = yamlBlock.split('\n');
-  let currentKey = '';
-  let inArray = false;
-  let inProjects = false;
-  let currentProject: Record<string, any> | null = null;
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-
-    // Handle projects list
-    if (trimmed.startsWith('projects:')) {
-      inProjects = true;
-      data.projects = [];
-      continue;
-    }
-
-    if (inProjects) {
-      if (line.startsWith('  - ') || line.startsWith('  -')) {
-        currentProject = {};
-        data.projects.push(currentProject);
-        const rest = line.replace(/^\s*-\s*/, '').trim();
-        if (rest.includes(':')) {
-          const [k, ...v] = rest.split(':');
-          const val = v.join(':').trim().replace(/^["']|["']$/g, '');
-          currentProject[k.trim()] = val === 'true' ? true : val === 'false' ? false : val;
-        }
-        continue;
-      }
-
-      if (currentProject && line.startsWith('    ')) {
-        const itemTrimmed = line.trim();
-        if (itemTrimmed.startsWith('- ')) {
-          const val = itemTrimmed.replace(/^[-\s]+/, '').replace(/^["']|["']$/g, '');
-          if (currentKey && Array.isArray(currentProject[currentKey])) {
-            currentProject[currentKey].push(val);
-          }
-          continue;
-        }
-
-        if (itemTrimmed.includes(':')) {
-          const [k, ...v] = itemTrimmed.split(':');
-          const keyName = k.trim();
-          const rawVal = v.join(':').trim();
-
-          if (!rawVal) {
-            currentKey = keyName;
-            currentProject[keyName] = [];
-          } else {
-            const cleanVal = rawVal.replace(/^["']|["']$/g, '');
-            currentProject[keyName] = cleanVal === 'true' ? true : cleanVal === 'false' ? false : cleanVal;
-            currentKey = keyName;
-          }
-        }
-        continue;
-      }
-    }
-
-    // Top level keys and arrays
-    if (trimmed.startsWith('- ')) {
-      const val = trimmed.replace(/^[-\s]+/, '').replace(/^["']|["']$/g, '');
-      if (inArray && currentKey && Array.isArray(data[currentKey])) {
-        data[currentKey].push(val);
-      }
-      continue;
-    }
-
-    if (line.includes(':')) {
-      inArray = false;
-      const [k, ...v] = line.split(':');
-      const keyName = k.trim();
-      const rawVal = v.join(':').trim();
-
-      if (!rawVal) {
-        inArray = true;
-        currentKey = keyName;
-        data[keyName] = [];
-      } else {
-        const cleanVal = rawVal.replace(/^["']|["']$/g, '');
-        data[keyName] = cleanVal === 'true' ? true : cleanVal === 'false' ? false : cleanVal;
-      }
-    }
+  // Find closing --- after the opening ---
+  const afterFirst = trimmed.slice(3);
+  const closingIdx = afterFirst.indexOf('---');
+  if (closingIdx === -1) {
+    return { data: {}, body: content };
   }
 
-  return { data, body };
+  const yamlText = afterFirst.slice(0, closingIdx).trim();
+  const bodyText = afterFirst.slice(closingIdx + 3).trim();
+
+  try {
+    const data = (load(yamlText) as Record<string, any>) || {};
+    return { data, body: bodyText };
+  } catch (err) {
+    console.error('Failed to parse YAML frontmatter:', err);
+    return { data: {}, body: bodyText };
+  }
 }
 
 // Cache parsed members & projects
@@ -161,7 +89,7 @@ export function getAllMembers(): Member[] {
           description: p.description || p.tagline || '',
           category: p.category || 'Tools',
           techStack: Array.isArray(p.techStack) ? p.techStack : [],
-          status: p.status || 'Active',
+          status: (p.status as ProjectStatus) || 'Active',
           githubUrl: p.githubUrl || `https://github.com/${username}`,
           liveUrl: p.liveUrl || '',
           screenshot: p.screenshot || '',

@@ -25,9 +25,13 @@ export function ProjectDirectory({ projects, onSelectProject }: ProjectDirectory
   // Filtered projects list
   const filteredProjects = useMemo(() => {
     return projects.filter((p) => {
+      const catLower = p.category.toLowerCase();
+      const selectedLower = selectedCategory.toLowerCase();
       const matchesCategory =
         selectedCategory === 'All' ||
-        p.category.toLowerCase() === selectedCategory.toLowerCase();
+        catLower === selectedLower ||
+        catLower.includes(selectedLower) ||
+        (selectedCategory === 'AI' && (catLower.includes('ai') || catLower.includes('ml')));
 
       const matchesTech =
         !selectedTech ||
