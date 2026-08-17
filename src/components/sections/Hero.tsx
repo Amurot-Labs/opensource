@@ -21,7 +21,11 @@ export function Hero({ projectCount, memberCount }: HeroProps) {
           <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
           <span className="text-secondary font-mono">Amurot Labs OSS</span>
           <span className="text-muted">·</span>
-          <span className="text-muted font-mono">{projectCount} Projects · {memberCount} Creators</span>
+          <span className="text-muted font-mono">
+            {projectCount > 0
+              ? `${projectCount} Projects · ${memberCount} Creators`
+              : 'Open for Submissions · Community Launchpad'}
+          </span>
         </div>
 
         {/* Headline */}
