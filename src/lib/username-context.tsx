@@ -23,14 +23,14 @@ const STORAGE_KEY = 'amurot_oss_username';
 export function UsernameProvider({ children }: { children: ReactNode }) {
   const [username, setUsernameState] = useState<string>(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem(STORAGE_KEY) || '';
+      return (localStorage.getItem(STORAGE_KEY) || '').toLowerCase();
     }
     return '';
   });
 
   const setUsername = (val: string) => {
-    // Sanitize username: remove leading @, spaces, and invalid chars
-    const clean = val.replace(/^@+/, '').replace(/\s+/g, '');
+    // Sanitize username: remove leading @, spaces, and auto-convert to lowercase
+    const clean = val.replace(/^@+/, '').replace(/\s+/g, '').toLowerCase();
     setUsernameState(clean);
     if (typeof window !== 'undefined') {
       if (clean) {
@@ -46,7 +46,7 @@ export function UsernameProvider({ children }: { children: ReactNode }) {
   };
 
   const isCustomized = Boolean(username && username.trim().length > 0);
-  const activeHandle = isCustomized ? username.trim() : 'your-username';
+  const activeHandle = isCustomized ? username.trim().toLowerCase() : 'your-username';
 
   const commands = {
     clone: `git clone https://github.com/${activeHandle}/opensource.git && cd opensource && npm install`,

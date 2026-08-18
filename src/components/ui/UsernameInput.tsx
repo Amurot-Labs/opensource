@@ -23,9 +23,12 @@ export function UsernameInput({ variant = 'hero', className = '' }: UsernameInpu
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
             placeholder="enter your github username..."
             aria-label="Your GitHub Username"
-            className="w-full bg-transparent px-2 py-1.5 text-xs sm:text-sm font-mono text-primary placeholder:text-muted/70 focus:outline-none"
+            className="w-full bg-transparent px-2 py-1.5 text-xs sm:text-sm font-mono text-primary placeholder:text-muted/70 focus:outline-none lowercase"
           />
 
           {isCustomized ? (
@@ -74,9 +77,12 @@ export function UsernameInput({ variant = 'hero', className = '' }: UsernameInpu
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck="false"
             placeholder="your-github-handle"
             aria-label="GitHub Username"
-            className="w-full bg-transparent px-1.5 py-1 text-xs font-mono text-primary placeholder:text-muted/70 focus:outline-none"
+            className="w-full bg-transparent px-1.5 py-1 text-xs font-mono text-primary placeholder:text-muted/70 focus:outline-none lowercase"
           />
           {isCustomized && (
             <button
