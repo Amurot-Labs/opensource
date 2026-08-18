@@ -13,8 +13,8 @@ projects:
     liveUrl: ""
     featured: true
     highlights:
-  -  "Daily implementation of Data Structures and Algorithms in C++"
-  - "Practiced algorithmic problem-solving and logical thinking"
-  - "Strengthened C++ programming fundamentals"
-  - "Maintained consistent coding practice through regular problem solving"
+     - "Daily Python programming practice"
+     - "Built consistency through regular coding and GitHub contributions"
+     - "Strengthened Python programming fundamentals"
+     - "Improved problem-solving skills through hands-on practice"
 ---

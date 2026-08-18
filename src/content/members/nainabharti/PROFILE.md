@@ -15,4 +15,4 @@ badges:
 ---
 
 ## About Me
-TI’m Naina Bharti, Information Technology student at Guru Ghasidas Vishwavidyalaya. I’m interested in web development and open-source projects. I enjoy building projects, learning new technologies, and improving my programming skills. Currently, I’m exploring HTML, CSS, JavaScript, React, C++, python, and Git/GitHub while looking for opportunities to contribute to the open-source community.ell the community about what you build, your favorite technologies, and what you're working on!
+I’m Naina Bharti, Information Technology student at Guru Ghasidas Vishwavidyalaya. I’m interested in web development and open-source projects. I enjoy building projects, learning new technologies, and improving my programming skills. Currently, I’m exploring HTML, CSS, JavaScript, React, C++, python, and Git/GitHub while looking for opportunities to contribute to the open-source community.ell the community about what you build, your favorite technologies, and what you're working on!
